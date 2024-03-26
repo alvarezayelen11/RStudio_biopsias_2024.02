@@ -1,0 +1,15 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+#Instalamos las librerías necesarias
+
+install.packages("tidyverse") 
+install.packages("readxl") 
+install.packages("conflicted")
+
+```
+
+
