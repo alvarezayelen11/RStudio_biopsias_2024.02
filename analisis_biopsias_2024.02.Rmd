@@ -4,11 +4,43 @@ output: html_notebook
 ---
 
 ```{r}
+
 #Instalamos las librerías necesarias
 
 install.packages("tidyverse") 
 install.packages("readxl") 
 install.packages("conflicted")
+
+```
+
+```{r}
+
+#Cargamos las librerias
+
+library(tidyverse)
+library(readxl)
+library(conflicted)
+conflicted::conflict_prefer("filter", "dplyr")
+conflicted::conflict_prefer("lag", "dplyr")
+
+```
+
+```{r}
+
+#Cargamos los archivos, primera aproximación a los datos
+
+df_vcc <- read_xlsx("dataset_vcc_2024.02.xlsx")
+df_biopsias <- read_xlsx("dataset_biopsias_2024.02.xlsx")
+View(df_vcc)
+View(df_biopsias)
+head(df_vcc)
+head(df_biopsias)
+summary(df_vcc)
+summary(df_biopsias)
+
+```
+
+```{r}
 
 ```
 

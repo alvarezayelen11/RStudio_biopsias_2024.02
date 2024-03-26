@@ -1754,8 +1754,9 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0luc3RhbGFtb3MgbGFzIGxpYnJlcsOtYXMgbmVjZXNhcmlhc1xuXG5pbnN0YWxsLnBhY2thZ2VzKFwidGlkeXZlcnNlXCIpIFxuaW5zdGFsbC5wYWNrYWdlcyhcInJlYWR4bFwiKSBcbmluc3RhbGwucGFja2FnZXMoXCJjb25mbGljdGVkXCIpXG5cbmBgYCJ9 -->
-<pre class="r"><code>#Instalamos las librerías necesarias
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jSW5zdGFsYW1vcyBsYXMgbGlicmVyw61hcyBuZWNlc2FyaWFzXG5cbmluc3RhbGwucGFja2FnZXMoXCJ0aWR5dmVyc2VcIikgXG5pbnN0YWxsLnBhY2thZ2VzKFwicmVhZHhsXCIpIFxuaW5zdGFsbC5wYWNrYWdlcyhcImNvbmZsaWN0ZWRcIilcblxuYGBgIn0= -->
+<pre class="r"><code>
+#Instalamos las librerías necesarias
 
 install.packages(&quot;tidyverse&quot;) 
 install.packages(&quot;readxl&quot;) 
@@ -1765,8 +1766,45 @@ install.packages(&quot;conflicted&quot;)
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jQ2FyZ2Ftb3MgbGFzIGxpYnJlcmlhc1xuXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmxpYnJhcnkocmVhZHhsKVxubGlicmFyeShjb25mbGljdGVkKVxuY29uZmxpY3RlZDo6Y29uZmxpY3RfcHJlZmVyKFwiZmlsdGVyXCIsIFwiZHBseXJcIilcbmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcihcImxhZ1wiLCBcImRwbHlyXCIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+#Cargamos las librerias
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCiNJbnN0YWxhbW9zIGxhcyBsaWJyZXLDrWFzIG5lY2VzYXJpYXMNCg0KaW5zdGFsbC5wYWNrYWdlcygidGlkeXZlcnNlIikgDQppbnN0YWxsLnBhY2thZ2VzKCJyZWFkeGwiKSANCmluc3RhbGwucGFja2FnZXMoImNvbmZsaWN0ZWQiKQ0KDQpgYGANCg0KDQo=</div>
+library(tidyverse)
+library(readxl)
+library(conflicted)
+conflicted::conflict_prefer(&quot;filter&quot;, &quot;dplyr&quot;)
+conflicted::conflict_prefer(&quot;lag&quot;, &quot;dplyr&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jQ2FyZ2Ftb3MgbG9zIGFyY2hpdm9zLCBwcmltZXJhIGFwcm94aW1hY2nDs24gYSBsb3MgZGF0b3NcblxuZGZfdmNjIDwtIHJlYWRfeGxzeChcImRhdGFzZXRfdmNjXzIwMjQuMDIueGxzeFwiKVxuZGZfYmlvcHNpYXMgPC0gcmVhZF94bHN4KFwiZGF0YXNldF9iaW9wc2lhc18yMDI0LjAyLnhsc3hcIilcblZpZXcoZGZfdmNjKVxuVmlldyhkZl9iaW9wc2lhcylcbmhlYWQoZGZfdmNjKVxuaGVhZChkZl9iaW9wc2lhcylcbnN1bW1hcnkoZGZfdmNjKVxuc3VtbWFyeShkZl9iaW9wc2lhcylcblxuYGBgIn0= -->
+<pre class="r"><code>
+#Cargamos los archivos, primera aproximación a los datos
+
+df_vcc &lt;- read_xlsx(&quot;dataset_vcc_2024.02.xlsx&quot;)
+df_biopsias &lt;- read_xlsx(&quot;dataset_biopsias_2024.02.xlsx&quot;)
+View(df_vcc)
+View(df_biopsias)
+head(df_vcc)
+head(df_biopsias)
+summary(df_vcc)
+summary(df_biopsias)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCg0KI0luc3RhbGFtb3MgbGFzIGxpYnJlcsOtYXMgbmVjZXNhcmlhcw0KDQppbnN0YWxsLnBhY2thZ2VzKCJ0aWR5dmVyc2UiKSANCmluc3RhbGwucGFja2FnZXMoInJlYWR4bCIpIA0KaW5zdGFsbC5wYWNrYWdlcygiY29uZmxpY3RlZCIpDQoNCmBgYA0KDQpgYGB7cn0NCg0KI0NhcmdhbW9zIGxhcyBsaWJyZXJpYXMNCg0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHJlYWR4bCkNCmxpYnJhcnkoY29uZmxpY3RlZCkNCmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcigiZmlsdGVyIiwgImRwbHlyIikNCmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcigibGFnIiwgImRwbHlyIikNCg0KYGBgDQoNCmBgYHtyfQ0KDQojQ2FyZ2Ftb3MgbG9zIGFyY2hpdm9zLCBwcmltZXJhIGFwcm94aW1hY2nDs24gYSBsb3MgZGF0b3MNCg0KZGZfdmNjIDwtIHJlYWRfeGxzeCgiZGF0YXNldF92Y2NfMjAyNC4wMi54bHN4IikNCmRmX2Jpb3BzaWFzIDwtIHJlYWRfeGxzeCgiZGF0YXNldF9iaW9wc2lhc18yMDI0LjAyLnhsc3giKQ0KVmlldyhkZl92Y2MpDQpWaWV3KGRmX2Jpb3BzaWFzKQ0KaGVhZChkZl92Y2MpDQpoZWFkKGRmX2Jpb3BzaWFzKQ0Kc3VtbWFyeShkZl92Y2MpDQpzdW1tYXJ5KGRmX2Jpb3BzaWFzKQ0KDQpgYGANCg0KYGBge3J9DQoNCmBgYA0KDQoNCg==</div>
 
 
 
