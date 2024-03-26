@@ -42,6 +42,104 @@ summary(df_biopsias)
 
 ```{r}
 
+#Evaluamos los NA por columna en el df_vcc
+
+nas_por_columna <- colSums(is.na(df_vcc))
+print(nas_por_columna)
+
+```
+
+```{r}
+
+#Evaluamos los NA por columna en el df_biopsias
+
+nas_por_columna <- colSums(is.na(df_biopsias))
+print(nas_por_columna)
+
+```
+
+```{r}
+
+#Armamos una columna en el df_vcc que indique si la preparacion del paciente fue adecuada o no.
+#El criterio para considerar que la preparacion del paciente si es adecuada se toma de la bibliografia
+#Fuente: https://bancos.salud.gob.ar/sites/default/files/2020-10/2020-10-27-indicadores-calidad-para-vcc-en-tamizaje-ccr.pdf
+
+preparacion_segun_boston <- function(Colon_izquierdo, Colon_transverso, Colon_derecho, Escala_de_Boston) {
+  if (Escala_de_Boston >= 6 & Colon_izquierdo >=2 & Colon_transverso >=2 & Colon_derecho >=2) {
+    return("SI")
+  }
+  else {
+    return("NO")
+  }
+}
+  
+df_vcc <- df_vcc %>%
+  mutate(Preparacion_adecuada = mapply(preparacion_segun_boston, Colon_izquierdo, Colon_transverso, Colon_derecho, Escala_de_Boston))
+
+View(df_vcc)
+
+```
+
+```{r}
+
+#Unimos los dataset df_vcc y df_biopsias de acuerdo a la columna ID_laboratorio. Nos interesan los datos de las columnas "Histologia" y "Patologo"
+
+df_vcc2 <- df_vcc
+df_vcc_biopsias <- merge(df_vcc, df_biopsias[, c("ID_laboratorio", "Histologia", "Patologo")], by = "ID_laboratorio", all = TRUE)
+df_vcc2 <- df_vcc_biopsias
+View(df_vcc2)
+
+```
+
+```{r}
+
+#Vemos que hay filas NA en el df resultante, las contabilizamos y decidimos filtrarlas (ya que se trata de biopsias que no se han extraido de las endoscopias que nos interesa analizar, es decir, no surgen de las videocolonoscopias realizadas en febrero de los centros médicos bajo estudio)
+
+total_nas <- sum(is.na(df_vcc2$ID_paciente))
+print(total_nas)
+df_vcc2 <- df_vcc2 %>%
+  filter(!is.na(ID_paciente))
+View(df_vcc2)
+
+```
+
+```{r}
+
+#Indicamos "No encontrado" en las columnas "Histologia" y "Patologo"
+
+df_vcc2$Histologia <- ifelse(is.na(df_vcc2$Histologia), "No encontrado", df_vcc2$Histologia)
+df_vcc2$Patologo <- ifelse(is.na(df_vcc2$Patologo), "No encontrado", df_vcc2$Patologo)
+View(df_vcc2)
+
+```
+
+```{r}
+
+#Revisamos si hay pacientes duplicados
+
+hay_duplicados <- any(duplicated(df_vcc2$ID_paciente))
+valores_duplicados <- df_vcc2$ID_paciente[duplicated(df_vcc2$ID_paciente)]
+print(hay_duplicados)
+print(valores_duplicados)
+
+```
+
+```{r}
+
+#Miramos en detalle los pacientes duplicados
+
+ver_duplicados <- filter(df_vcc2, df_vcc2$ID_paciente == "139356" | df_vcc2$ID_paciente == "585659" | df_vcc2$ID_paciente == "589942" |df_vcc2$ID_paciente == "591555" |df_vcc2$ID_paciente == "578373" |df_vcc2$ID_paciente == "592604" |df_vcc2$ID_paciente == "16425" |df_vcc2$ID_paciente == "591536")
+ver_duplicados
+
+```
+
+```{r}
+
+#En el chunk anterior comprobamos que en la mayoría de los casos en donde se repiten los ID_paciente es porque efectivamente se trata del mismo paciente pero que realizó dos endoscopías distintas en el mismo mes, o con dos operadores médicos diferentes, por lo cual no es un error del dataframe, sino que es información consistente. Sin embargo, detectamos un único caso de un paciente en donde coinciden todos los campos excepto el equipo utilizado, ese registro lo vamos a eliminar porque se trata de un error humano al momento de ingresar la información
+
+df_vcc2 <- filter(df_vcc2, !(ID_paciente == "585659" & Equipo == "O8 - OLYMPUS CF-H170L"))
+View(df_vcc2)
+
 ```
 
 

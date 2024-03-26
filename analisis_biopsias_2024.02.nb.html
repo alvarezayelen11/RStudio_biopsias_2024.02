@@ -1800,11 +1800,136 @@ summary(df_biopsias)
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jRXZhbHVhbW9zIGxvcyBOQSBwb3IgY29sdW1uYSBlbiBlbCBkZl92Y2NcblxubmFzX3Bvcl9jb2x1bW5hIDwtIGNvbFN1bXMoaXMubmEoZGZfdmNjKSlcbnByaW50KG5hc19wb3JfY29sdW1uYSlcblxuYGBgIn0= -->
+<pre class="r"><code>
+#Evaluamos los NA por columna en el df_vcc
+
+nas_por_columna &lt;- colSums(is.na(df_vcc))
+print(nas_por_columna)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jRXZhbHVhbW9zIGxvcyBOQSBwb3IgY29sdW1uYSBlbiBlbCBkZl9iaW9wc2lhc1xuXG5uYXNfcG9yX2NvbHVtbmEgPC0gY29sU3Vtcyhpcy5uYShkZl9iaW9wc2lhcykpXG5wcmludChuYXNfcG9yX2NvbHVtbmEpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+#Evaluamos los NA por columna en el df_biopsias
+
+nas_por_columna &lt;- colSums(is.na(df_biopsias))
+print(nas_por_columna)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jQXJtYW1vcyB1bmEgY29sdW1uYSBlbiBlbCBkZl92Y2MgcXVlIGluZGlxdWUgc2kgbGEgcHJlcGFyYWNpb24gZGVsIHBhY2llbnRlIGZ1ZSBhZGVjdWFkYSBvIG5vLlxuI0VsIGNyaXRlcmlvIHBhcmEgY29uc2lkZXJhciBxdWUgbGEgcHJlcGFyYWNpb24gZGVsIHBhY2llbnRlIHNpIGVzIGFkZWN1YWRhIHNlIHRvbWEgZGUgbGEgYmlibGlvZ3JhZmlhXG4jRnVlbnRlOiBodHRwczovL2JhbmNvcy5zYWx1ZC5nb2IuYXIvc2l0ZXMvZGVmYXVsdC9maWxlcy8yMDIwLTEwLzIwMjAtMTAtMjctaW5kaWNhZG9yZXMtY2FsaWRhZC1wYXJhLXZjYy1lbi10YW1pemFqZS1jY3IucGRmXG5cbnByZXBhcmFjaW9uX3NlZ3VuX2Jvc3RvbiA8LSBmdW5jdGlvbihDb2xvbl9penF1aWVyZG8sIENvbG9uX3RyYW5zdmVyc28sIENvbG9uX2RlcmVjaG8sIEVzY2FsYV9kZV9Cb3N0b24pIHtcbiAgaWYgKEVzY2FsYV9kZV9Cb3N0b24gPj0gNiAmIENvbG9uX2l6cXVpZXJkbyA+PTIgJiBDb2xvbl90cmFuc3ZlcnNvID49MiAmIENvbG9uX2RlcmVjaG8gPj0yKSB7XG4gICAgcmV0dXJuKFwiU0lcIilcbiAgfVxuICBlbHNlIHtcbiAgICByZXR1cm4oXCJOT1wiKVxuICB9XG59XG4gIFxuZGZfdmNjIDwtIGRmX3ZjYyAlPiVcbiAgbXV0YXRlKFByZXBhcmFjaW9uX2FkZWN1YWRhID0gbWFwcGx5KHByZXBhcmFjaW9uX3NlZ3VuX2Jvc3RvbiwgQ29sb25faXpxdWllcmRvLCBDb2xvbl90cmFuc3ZlcnNvLCBDb2xvbl9kZXJlY2hvLCBFc2NhbGFfZGVfQm9zdG9uKSlcblxuVmlldyhkZl92Y2MpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+#Armamos una columna en el df_vcc que indique si la preparacion del paciente fue adecuada o no.
+#El criterio para considerar que la preparacion del paciente si es adecuada se toma de la bibliografia
+#Fuente: https://bancos.salud.gob.ar/sites/default/files/2020-10/2020-10-27-indicadores-calidad-para-vcc-en-tamizaje-ccr.pdf
+
+preparacion_segun_boston &lt;- function(Colon_izquierdo, Colon_transverso, Colon_derecho, Escala_de_Boston) {
+  if (Escala_de_Boston &gt;= 6 &amp; Colon_izquierdo &gt;=2 &amp; Colon_transverso &gt;=2 &amp; Colon_derecho &gt;=2) {
+    return(&quot;SI&quot;)
+  }
+  else {
+    return(&quot;NO&quot;)
+  }
+}
+  
+df_vcc &lt;- df_vcc %&gt;%
+  mutate(Preparacion_adecuada = mapply(preparacion_segun_boston, Colon_izquierdo, Colon_transverso, Colon_derecho, Escala_de_Boston))
+
+View(df_vcc)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jVW5pbW9zIGxvcyBkYXRhc2V0IGRmX3ZjYyB5IGRmX2Jpb3BzaWFzIGRlIGFjdWVyZG8gYSBsYSBjb2x1bW5hIElEX2xhYm9yYXRvcmlvLiBOb3MgaW50ZXJlc2FuIGxvcyBkYXRvcyBkZSBsYXMgY29sdW1uYXMgXCJIaXN0b2xvZ2lhXCIgeSBcIlBhdG9sb2dvXCJcblxuZGZfdmNjMiA8LSBkZl92Y2NcbmRmX3ZjY19iaW9wc2lhcyA8LSBtZXJnZShkZl92Y2MsIGRmX2Jpb3BzaWFzWywgYyhcIklEX2xhYm9yYXRvcmlvXCIsIFwiSGlzdG9sb2dpYVwiLCBcIlBhdG9sb2dvXCIpXSwgYnkgPSBcIklEX2xhYm9yYXRvcmlvXCIsIGFsbCA9IFRSVUUpXG5kZl92Y2MyIDwtIGRmX3ZjY19iaW9wc2lhc1xuVmlldyhkZl92Y2MyKVxuXG5gYGAifQ== -->
+<pre class="r"><code>
+#Unimos los dataset df_vcc y df_biopsias de acuerdo a la columna ID_laboratorio. Nos interesan los datos de las columnas &quot;Histologia&quot; y &quot;Patologo&quot;
+
+df_vcc2 &lt;- df_vcc
+df_vcc_biopsias &lt;- merge(df_vcc, df_biopsias[, c(&quot;ID_laboratorio&quot;, &quot;Histologia&quot;, &quot;Patologo&quot;)], by = &quot;ID_laboratorio&quot;, all = TRUE)
+df_vcc2 &lt;- df_vcc_biopsias
+View(df_vcc2)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jVmVtb3MgcXVlIGhheSBmaWxhcyBOQSBlbiBlbCBkZiByZXN1bHRhbnRlLCBsYXMgY29udGFiaWxpemFtb3MgeSBkZWNpZGltb3MgZmlsdHJhcmxhcyAoeWEgcXVlIHNlIHRyYXRhIGRlIGJpb3BzaWFzIHF1ZSBubyBzZSBoYW4gZXh0cmFpZG8gZGUgbGFzIGVuZG9zY29waWFzIHF1ZSBub3MgaW50ZXJlc2EgYW5hbGl6YXIsIGVzIGRlY2lyLCBubyBzdXJnZW4gZGUgbGFzIHZpZGVvY29sb25vc2NvcGlhcyByZWFsaXphZGFzIGVuIGZlYnJlcm8gZGUgbG9zIGNlbnRyb3MgbcOpZGljb3MgYmFqbyBlc3R1ZGlvKVxuXG50b3RhbF9uYXMgPC0gc3VtKGlzLm5hKGRmX3ZjYzIkSURfcGFjaWVudGUpKVxucHJpbnQodG90YWxfbmFzKVxuZGZfdmNjMiA8LSBkZl92Y2MyICU+JVxuICBmaWx0ZXIoIWlzLm5hKElEX3BhY2llbnRlKSlcblZpZXcoZGZfdmNjMilcblxuYGBgIn0= -->
+<pre class="r"><code>
+#Vemos que hay filas NA en el df resultante, las contabilizamos y decidimos filtrarlas (ya que se trata de biopsias que no se han extraido de las endoscopias que nos interesa analizar, es decir, no surgen de las videocolonoscopias realizadas en febrero de los centros médicos bajo estudio)
+
+total_nas &lt;- sum(is.na(df_vcc2$ID_paciente))
+print(total_nas)
+df_vcc2 &lt;- df_vcc2 %&gt;%
+  filter(!is.na(ID_paciente))
+View(df_vcc2)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jSW5kaWNhbW9zIFwiTm8gZW5jb250cmFkb1wiIGVuIGxhcyBjb2x1bW5hcyBcIkhpc3RvbG9naWFcIiB5IFwiUGF0b2xvZ29cIlxuXG5kZl92Y2MyJEhpc3RvbG9naWEgPC0gaWZlbHNlKGlzLm5hKGRmX3ZjYzIkSGlzdG9sb2dpYSksIFwiTm8gZW5jb250cmFkb1wiLCBkZl92Y2MyJEhpc3RvbG9naWEpXG5kZl92Y2MyJFBhdG9sb2dvIDwtIGlmZWxzZShpcy5uYShkZl92Y2MyJFBhdG9sb2dvKSwgXCJObyBlbmNvbnRyYWRvXCIsIGRmX3ZjYzIkUGF0b2xvZ28pXG5WaWV3KGRmX3ZjYzIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+#Indicamos &quot;No encontrado&quot; en las columnas &quot;Histologia&quot; y &quot;Patologo&quot;
+
+df_vcc2$Histologia &lt;- ifelse(is.na(df_vcc2$Histologia), &quot;No encontrado&quot;, df_vcc2$Histologia)
+df_vcc2$Patologo &lt;- ifelse(is.na(df_vcc2$Patologo), &quot;No encontrado&quot;, df_vcc2$Patologo)
+View(df_vcc2)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jUmV2aXNhbW9zIHNpIGhheSBwYWNpZW50ZXMgZHVwbGljYWRvc1xuXG5oYXlfZHVwbGljYWRvcyA8LSBhbnkoZHVwbGljYXRlZChkZl92Y2MyJElEX3BhY2llbnRlKSlcbnZhbG9yZXNfZHVwbGljYWRvcyA8LSBkZl92Y2MyJElEX3BhY2llbnRlW2R1cGxpY2F0ZWQoZGZfdmNjMiRJRF9wYWNpZW50ZSldXG5wcmludChoYXlfZHVwbGljYWRvcylcbnByaW50KHZhbG9yZXNfZHVwbGljYWRvcylcblxuYGBgIn0= -->
+<pre class="r"><code>
+#Revisamos si hay pacientes duplicados
+
+hay_duplicados &lt;- any(duplicated(df_vcc2$ID_paciente))
+valores_duplicados &lt;- df_vcc2$ID_paciente[duplicated(df_vcc2$ID_paciente)]
+print(hay_duplicados)
+print(valores_duplicados)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jTWlyYW1vcyBlbiBkZXRhbGxlIGxvcyBwYWNpZW50ZXMgZHVwbGljYWRvc1xuXG52ZXJfZHVwbGljYWRvcyA8LSBmaWx0ZXIoZGZfdmNjMiwgZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSBcIjEzOTM1NlwiIHwgZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSBcIjU4NTY1OVwiIHwgZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSBcIjU4OTk0MlwiIHxkZl92Y2MyJElEX3BhY2llbnRlID09IFwiNTkxNTU1XCIgfGRmX3ZjYzIkSURfcGFjaWVudGUgPT0gXCI1NzgzNzNcIiB8ZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSBcIjU5MjYwNFwiIHxkZl92Y2MyJElEX3BhY2llbnRlID09IFwiMTY0MjVcIiB8ZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSBcIjU5MTUzNlwiKVxudmVyX2R1cGxpY2Fkb3NcblxuYGBgIn0= -->
+<pre class="r"><code>
+#Miramos en detalle los pacientes duplicados
+
+ver_duplicados &lt;- filter(df_vcc2, df_vcc2$ID_paciente == &quot;139356&quot; | df_vcc2$ID_paciente == &quot;585659&quot; | df_vcc2$ID_paciente == &quot;589942&quot; |df_vcc2$ID_paciente == &quot;591555&quot; |df_vcc2$ID_paciente == &quot;578373&quot; |df_vcc2$ID_paciente == &quot;592604&quot; |df_vcc2$ID_paciente == &quot;16425&quot; |df_vcc2$ID_paciente == &quot;591536&quot;)
+ver_duplicados
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG4jRW4gZWwgY2h1bmsgYW50ZXJpb3IgY29tcHJvYmFtb3MgcXVlIGVuIGxhIG1heW9yw61hIGRlIGxvcyBjYXNvcyBlbiBkb25kZSBzZSByZXBpdGVuIGxvcyBJRF9wYWNpZW50ZSBlcyBwb3JxdWUgZWZlY3RpdmFtZW50ZSBzZSB0cmF0YSBkZWwgbWlzbW8gcGFjaWVudGUgcGVybyBxdWUgcmVhbGl6w7MgZG9zIGVuZG9zY29ww61hcyBkaXN0aW50YXMgZW4gZWwgbWlzbW8gbWVzLCBvIGNvbiBkb3Mgb3BlcmFkb3JlcyBtw6lkaWNvcyBkaWZlcmVudGVzLCBwb3IgbG8gY3VhbCBubyBlcyB1biBlcnJvciBkZWwgZGF0YWZyYW1lLCBzaW5vIHF1ZSBlcyBpbmZvcm1hY2nDs24gY29uc2lzdGVudGUuIFNpbiBlbWJhcmdvLCBkZXRlY3RhbW9zIHVuIMO6bmljbyBjYXNvIGRlIHVuIHBhY2llbnRlIGVuIGRvbmRlIGNvaW5jaWRlbiB0b2RvcyBsb3MgY2FtcG9zIGV4Y2VwdG8gZWwgZXF1aXBvIHV0aWxpemFkbywgZXNlIHJlZ2lzdHJvIGxvIHZhbW9zIGEgZWxpbWluYXIgcG9ycXVlIHNlIHRyYXRhIGRlIHVuIGVycm9yIGh1bWFubyBhbCBtb21lbnRvIGRlIGluZ3Jlc2FyIGxhIGluZm9ybWFjacOzblxuXG5kZl92Y2MyIDwtIGZpbHRlcihkZl92Y2MyLCAhKElEX3BhY2llbnRlID09IFwiNTg1NjU5XCIgJiBFcXVpcG8gPT0gXCJPOCAtIE9MWU1QVVMgQ0YtSDE3MExcIikpXG5WaWV3KGRmX3ZjYzIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+#En el chunk anterior comprobamos que en la mayoría de los casos en donde se repiten los ID_paciente es porque efectivamente se trata del mismo paciente pero que realizó dos endoscopías distintas en el mismo mes, o con dos operadores médicos diferentes, por lo cual no es un error del dataframe, sino que es información consistente. Sin embargo, detectamos un único caso de un paciente en donde coinciden todos los campos excepto el equipo utilizado, ese registro lo vamos a eliminar porque se trata de un error humano al momento de ingresar la información
+
+df_vcc2 &lt;- filter(df_vcc2, !(ID_paciente == &quot;585659&quot; &amp; Equipo == &quot;O8 - OLYMPUS CF-H170L&quot;))
+View(df_vcc2)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCg0KI0luc3RhbGFtb3MgbGFzIGxpYnJlcsOtYXMgbmVjZXNhcmlhcw0KDQppbnN0YWxsLnBhY2thZ2VzKCJ0aWR5dmVyc2UiKSANCmluc3RhbGwucGFja2FnZXMoInJlYWR4bCIpIA0KaW5zdGFsbC5wYWNrYWdlcygiY29uZmxpY3RlZCIpDQoNCmBgYA0KDQpgYGB7cn0NCg0KI0NhcmdhbW9zIGxhcyBsaWJyZXJpYXMNCg0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHJlYWR4bCkNCmxpYnJhcnkoY29uZmxpY3RlZCkNCmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcigiZmlsdGVyIiwgImRwbHlyIikNCmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcigibGFnIiwgImRwbHlyIikNCg0KYGBgDQoNCmBgYHtyfQ0KDQojQ2FyZ2Ftb3MgbG9zIGFyY2hpdm9zLCBwcmltZXJhIGFwcm94aW1hY2nDs24gYSBsb3MgZGF0b3MNCg0KZGZfdmNjIDwtIHJlYWRfeGxzeCgiZGF0YXNldF92Y2NfMjAyNC4wMi54bHN4IikNCmRmX2Jpb3BzaWFzIDwtIHJlYWRfeGxzeCgiZGF0YXNldF9iaW9wc2lhc18yMDI0LjAyLnhsc3giKQ0KVmlldyhkZl92Y2MpDQpWaWV3KGRmX2Jpb3BzaWFzKQ0KaGVhZChkZl92Y2MpDQpoZWFkKGRmX2Jpb3BzaWFzKQ0Kc3VtbWFyeShkZl92Y2MpDQpzdW1tYXJ5KGRmX2Jpb3BzaWFzKQ0KDQpgYGANCg0KYGBge3J9DQoNCmBgYA0KDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7cn0NCg0KI0luc3RhbGFtb3MgbGFzIGxpYnJlcsOtYXMgbmVjZXNhcmlhcw0KDQppbnN0YWxsLnBhY2thZ2VzKCJ0aWR5dmVyc2UiKSANCmluc3RhbGwucGFja2FnZXMoInJlYWR4bCIpIA0KaW5zdGFsbC5wYWNrYWdlcygiY29uZmxpY3RlZCIpDQoNCmBgYA0KDQpgYGB7cn0NCg0KI0NhcmdhbW9zIGxhcyBsaWJyZXJpYXMNCg0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHJlYWR4bCkNCmxpYnJhcnkoY29uZmxpY3RlZCkNCmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcigiZmlsdGVyIiwgImRwbHlyIikNCmNvbmZsaWN0ZWQ6OmNvbmZsaWN0X3ByZWZlcigibGFnIiwgImRwbHlyIikNCg0KYGBgDQoNCmBgYHtyfQ0KDQojQ2FyZ2Ftb3MgbG9zIGFyY2hpdm9zLCBwcmltZXJhIGFwcm94aW1hY2nDs24gYSBsb3MgZGF0b3MNCg0KZGZfdmNjIDwtIHJlYWRfeGxzeCgiZGF0YXNldF92Y2NfMjAyNC4wMi54bHN4IikNCmRmX2Jpb3BzaWFzIDwtIHJlYWRfeGxzeCgiZGF0YXNldF9iaW9wc2lhc18yMDI0LjAyLnhsc3giKQ0KVmlldyhkZl92Y2MpDQpWaWV3KGRmX2Jpb3BzaWFzKQ0KaGVhZChkZl92Y2MpDQpoZWFkKGRmX2Jpb3BzaWFzKQ0Kc3VtbWFyeShkZl92Y2MpDQpzdW1tYXJ5KGRmX2Jpb3BzaWFzKQ0KDQpgYGANCg0KYGBge3J9DQoNCiNFdmFsdWFtb3MgbG9zIE5BIHBvciBjb2x1bW5hIGVuIGVsIGRmX3ZjYw0KDQpuYXNfcG9yX2NvbHVtbmEgPC0gY29sU3Vtcyhpcy5uYShkZl92Y2MpKQ0KcHJpbnQobmFzX3Bvcl9jb2x1bW5hKQ0KDQpgYGANCg0KYGBge3J9DQoNCiNFdmFsdWFtb3MgbG9zIE5BIHBvciBjb2x1bW5hIGVuIGVsIGRmX2Jpb3BzaWFzDQoNCm5hc19wb3JfY29sdW1uYSA8LSBjb2xTdW1zKGlzLm5hKGRmX2Jpb3BzaWFzKSkNCnByaW50KG5hc19wb3JfY29sdW1uYSkNCg0KYGBgDQoNCmBgYHtyfQ0KDQojQXJtYW1vcyB1bmEgY29sdW1uYSBlbiBlbCBkZl92Y2MgcXVlIGluZGlxdWUgc2kgbGEgcHJlcGFyYWNpb24gZGVsIHBhY2llbnRlIGZ1ZSBhZGVjdWFkYSBvIG5vLg0KI0VsIGNyaXRlcmlvIHBhcmEgY29uc2lkZXJhciBxdWUgbGEgcHJlcGFyYWNpb24gZGVsIHBhY2llbnRlIHNpIGVzIGFkZWN1YWRhIHNlIHRvbWEgZGUgbGEgYmlibGlvZ3JhZmlhDQojRnVlbnRlOiBodHRwczovL2JhbmNvcy5zYWx1ZC5nb2IuYXIvc2l0ZXMvZGVmYXVsdC9maWxlcy8yMDIwLTEwLzIwMjAtMTAtMjctaW5kaWNhZG9yZXMtY2FsaWRhZC1wYXJhLXZjYy1lbi10YW1pemFqZS1jY3IucGRmDQoNCnByZXBhcmFjaW9uX3NlZ3VuX2Jvc3RvbiA8LSBmdW5jdGlvbihDb2xvbl9penF1aWVyZG8sIENvbG9uX3RyYW5zdmVyc28sIENvbG9uX2RlcmVjaG8sIEVzY2FsYV9kZV9Cb3N0b24pIHsNCiAgaWYgKEVzY2FsYV9kZV9Cb3N0b24gPj0gNiAmIENvbG9uX2l6cXVpZXJkbyA+PTIgJiBDb2xvbl90cmFuc3ZlcnNvID49MiAmIENvbG9uX2RlcmVjaG8gPj0yKSB7DQogICAgcmV0dXJuKCJTSSIpDQogIH0NCiAgZWxzZSB7DQogICAgcmV0dXJuKCJOTyIpDQogIH0NCn0NCiAgDQpkZl92Y2MgPC0gZGZfdmNjICU+JQ0KICBtdXRhdGUoUHJlcGFyYWNpb25fYWRlY3VhZGEgPSBtYXBwbHkocHJlcGFyYWNpb25fc2VndW5fYm9zdG9uLCBDb2xvbl9penF1aWVyZG8sIENvbG9uX3RyYW5zdmVyc28sIENvbG9uX2RlcmVjaG8sIEVzY2FsYV9kZV9Cb3N0b24pKQ0KDQpWaWV3KGRmX3ZjYykNCg0KYGBgDQoNCmBgYHtyfQ0KDQojVW5pbW9zIGxvcyBkYXRhc2V0IGRmX3ZjYyB5IGRmX2Jpb3BzaWFzIGRlIGFjdWVyZG8gYSBsYSBjb2x1bW5hIElEX2xhYm9yYXRvcmlvLiBOb3MgaW50ZXJlc2FuIGxvcyBkYXRvcyBkZSBsYXMgY29sdW1uYXMgIkhpc3RvbG9naWEiIHkgIlBhdG9sb2dvIg0KDQpkZl92Y2MyIDwtIGRmX3ZjYw0KZGZfdmNjX2Jpb3BzaWFzIDwtIG1lcmdlKGRmX3ZjYywgZGZfYmlvcHNpYXNbLCBjKCJJRF9sYWJvcmF0b3JpbyIsICJIaXN0b2xvZ2lhIiwgIlBhdG9sb2dvIildLCBieSA9ICJJRF9sYWJvcmF0b3JpbyIsIGFsbCA9IFRSVUUpDQpkZl92Y2MyIDwtIGRmX3ZjY19iaW9wc2lhcw0KVmlldyhkZl92Y2MyKQ0KDQpgYGANCg0KYGBge3J9DQoNCiNWZW1vcyBxdWUgaGF5IGZpbGFzIE5BIGVuIGVsIGRmIHJlc3VsdGFudGUsIGxhcyBjb250YWJpbGl6YW1vcyB5IGRlY2lkaW1vcyBmaWx0cmFybGFzICh5YSBxdWUgc2UgdHJhdGEgZGUgYmlvcHNpYXMgcXVlIG5vIHNlIGhhbiBleHRyYWlkbyBkZSBsYXMgZW5kb3Njb3BpYXMgcXVlIG5vcyBpbnRlcmVzYSBhbmFsaXphciwgZXMgZGVjaXIsIG5vIHN1cmdlbiBkZSBsYXMgdmlkZW9jb2xvbm9zY29waWFzIHJlYWxpemFkYXMgZW4gZmVicmVybyBkZSBsb3MgY2VudHJvcyBtw6lkaWNvcyBiYWpvIGVzdHVkaW8pDQoNCnRvdGFsX25hcyA8LSBzdW0oaXMubmEoZGZfdmNjMiRJRF9wYWNpZW50ZSkpDQpwcmludCh0b3RhbF9uYXMpDQpkZl92Y2MyIDwtIGRmX3ZjYzIgJT4lDQogIGZpbHRlcighaXMubmEoSURfcGFjaWVudGUpKQ0KVmlldyhkZl92Y2MyKQ0KDQpgYGANCg0KYGBge3J9DQoNCiNJbmRpY2Ftb3MgIk5vIGVuY29udHJhZG8iIGVuIGxhcyBjb2x1bW5hcyAiSGlzdG9sb2dpYSIgeSAiUGF0b2xvZ28iDQoNCmRmX3ZjYzIkSGlzdG9sb2dpYSA8LSBpZmVsc2UoaXMubmEoZGZfdmNjMiRIaXN0b2xvZ2lhKSwgIk5vIGVuY29udHJhZG8iLCBkZl92Y2MyJEhpc3RvbG9naWEpDQpkZl92Y2MyJFBhdG9sb2dvIDwtIGlmZWxzZShpcy5uYShkZl92Y2MyJFBhdG9sb2dvKSwgIk5vIGVuY29udHJhZG8iLCBkZl92Y2MyJFBhdG9sb2dvKQ0KVmlldyhkZl92Y2MyKQ0KDQpgYGANCg0KYGBge3J9DQoNCiNSZXZpc2Ftb3Mgc2kgaGF5IHBhY2llbnRlcyBkdXBsaWNhZG9zDQoNCmhheV9kdXBsaWNhZG9zIDwtIGFueShkdXBsaWNhdGVkKGRmX3ZjYzIkSURfcGFjaWVudGUpKQ0KdmFsb3Jlc19kdXBsaWNhZG9zIDwtIGRmX3ZjYzIkSURfcGFjaWVudGVbZHVwbGljYXRlZChkZl92Y2MyJElEX3BhY2llbnRlKV0NCnByaW50KGhheV9kdXBsaWNhZG9zKQ0KcHJpbnQodmFsb3Jlc19kdXBsaWNhZG9zKQ0KDQpgYGANCg0KYGBge3J9DQoNCiNNaXJhbW9zIGVuIGRldGFsbGUgbG9zIHBhY2llbnRlcyBkdXBsaWNhZG9zDQoNCnZlcl9kdXBsaWNhZG9zIDwtIGZpbHRlcihkZl92Y2MyLCBkZl92Y2MyJElEX3BhY2llbnRlID09ICIxMzkzNTYiIHwgZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSAiNTg1NjU5IiB8IGRmX3ZjYzIkSURfcGFjaWVudGUgPT0gIjU4OTk0MiIgfGRmX3ZjYzIkSURfcGFjaWVudGUgPT0gIjU5MTU1NSIgfGRmX3ZjYzIkSURfcGFjaWVudGUgPT0gIjU3ODM3MyIgfGRmX3ZjYzIkSURfcGFjaWVudGUgPT0gIjU5MjYwNCIgfGRmX3ZjYzIkSURfcGFjaWVudGUgPT0gIjE2NDI1IiB8ZGZfdmNjMiRJRF9wYWNpZW50ZSA9PSAiNTkxNTM2IikNCnZlcl9kdXBsaWNhZG9zDQoNCmBgYA0KDQpgYGB7cn0NCg0KI0VuIGVsIGNodW5rIGFudGVyaW9yIGNvbXByb2JhbW9zIHF1ZSBlbiBsYSBtYXlvcsOtYSBkZSBsb3MgY2Fzb3MgZW4gZG9uZGUgc2UgcmVwaXRlbiBsb3MgSURfcGFjaWVudGUgZXMgcG9ycXVlIGVmZWN0aXZhbWVudGUgc2UgdHJhdGEgZGVsIG1pc21vIHBhY2llbnRlIHBlcm8gcXVlIHJlYWxpesOzIGRvcyBlbmRvc2NvcMOtYXMgZGlzdGludGFzIGVuIGVsIG1pc21vIG1lcywgbyBjb24gZG9zIG9wZXJhZG9yZXMgbcOpZGljb3MgZGlmZXJlbnRlcywgcG9yIGxvIGN1YWwgbm8gZXMgdW4gZXJyb3IgZGVsIGRhdGFmcmFtZSwgc2lubyBxdWUgZXMgaW5mb3JtYWNpw7NuIGNvbnNpc3RlbnRlLiBTaW4gZW1iYXJnbywgZGV0ZWN0YW1vcyB1biDDum5pY28gY2FzbyBkZSB1biBwYWNpZW50ZSBlbiBkb25kZSBjb2luY2lkZW4gdG9kb3MgbG9zIGNhbXBvcyBleGNlcHRvIGVsIGVxdWlwbyB1dGlsaXphZG8sIGVzZSByZWdpc3RybyBsbyB2YW1vcyBhIGVsaW1pbmFyIHBvcnF1ZSBzZSB0cmF0YSBkZSB1biBlcnJvciBodW1hbm8gYWwgbW9tZW50byBkZSBpbmdyZXNhciBsYSBpbmZvcm1hY2nDs24NCg0KZGZfdmNjMiA8LSBmaWx0ZXIoZGZfdmNjMiwgIShJRF9wYWNpZW50ZSA9PSAiNTg1NjU5IiAmIEVxdWlwbyA9PSAiTzggLSBPTFlNUFVTIENGLUgxNzBMIikpDQpWaWV3KGRmX3ZjYzIpDQoNCmBgYA0KDQoNCg==</div>
 
 
 
