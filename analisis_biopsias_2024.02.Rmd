@@ -142,4 +142,67 @@ View(df_vcc2)
 
 ```
 
+```{r}
+
+#Una vez hecha la preparación y primera aproximación a los datos, nos abocamos al analisis mensual de los indicadores solicitados por la Gerencia. Primero, un ranking de los 10 operadores médicos que más procedimientos endoscópicos realizaron.
+
+top10_operadores <- df_vcc2 %>%
+  group_by(Medico_operador) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(desc(Frecuencia)) %>%
+  head(10)
+View(top10_operadores)
+
+```
+
+```{r}
+
+# En segundo lugar, calculamos la Tasa de Intubacion Cecal (TIC), es decir, la proporción de llegada a ciego. La bibliografia indica que el mínimo estándar es >=90% y el objetivo estándar es >=95%. 
+#Fuente: https://bancos.salud.gob.ar/sites/default/files/2020-10/2020-10-27-indicadores-calidad-para-vcc-en-tamizaje-ccr.pdf 
+#Analizamos cuáles son los 10 operadores médicos que alcanzaron la mejor TIC.
+
+TIC_boolean <- function(Llegada_a_ciego) {
+  if (Llegada_a_ciego == "SI") {
+    return(1)
+  }
+  else {
+    return(0)
+  }
+}
+  
+df_vcc2 <- df_vcc2 %>%
+  mutate(Llegada_a_ciego_boolean = mapply(TIC_boolean, Llegada_a_ciego))
+
+top10_tic <- df_vcc2 %>%
+  group_by(Medico_operador) %>%
+  summarise(
+    Total_procedimientos = n(),
+    TIC = round(sum(Llegada_a_ciego_boolean) / n() * 100,2)) %>%
+  arrange(desc(TIC)) %>%
+  head(10)
+
+View(top10_tic)
+
+#El siguiente bloque de código lo usé para corroborar que la TIC sea correcta
+#df_tic_por_operador <- aggregate(Llegada_a_ciego_boolean ~ Medico_operador, data = df_vcc2, FUN = sum)
+#View(df_tic_por_operador)
+
+```
+
+```{r}
+
+#También necesitamos conocer cuáles son los operadores médicos que este mes no alcanzaron los objetivos de calidad propuestos
+
+df_tic_no_alcanza <- df_vcc2 %>%
+  group_by(Medico_operador) %>%
+  summarise(
+    Total_procedimientos = n(),
+    TIC = round(sum(Llegada_a_ciego_boolean) / n() * 100,2)) %>%
+  filter(TIC<90) %>%
+  arrange(desc(TIC))
+
+View(df_tic_no_alcanza)
+
+```
+
 
