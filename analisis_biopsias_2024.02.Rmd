@@ -205,4 +205,55 @@ View(df_tic_no_alcanza)
 
 ```
 
+```{r}
+
+#Evaluamos cuáles centros de salud han realizado más procedimientos. Nos interesan los 5 primeros centros, y el resto los agrupamos en la categoría "Otros_centros"
+
+df_centros <- df_vcc2 %>%
+  group_by(Centro) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(desc(Frecuencia))
+
+top5_centros <- df_centros %>% head(5)
+
+df_centros <- df_centros %>%
+  mutate(Centros = ifelse(Centro %in% top5_centros$Centro, as.character(Centro), "Otros_centros"))
+
+df_centros <- df_centros %>%
+  group_by(Centros) %>%
+  summarise(Total_procedimientos = sum(Frecuencia)) %>%
+  arrange(desc(Total_procedimientos))
+
+View(df_centros)
+
+# Convertimos 'Centros' en un factor ordenado para que el gráfico quede en orden de frecuencia
+
+df_centros$Centros <- factor(df_centros$Centros, levels = df_centros$Centros[order(df_centros$Total_procedimientos, decreasing = TRUE)])
+
+# Queremos que el gráfico muestre los porcentajes en vez de las frecuencias absolutas
+
+df_centros <- df_centros %>%
+  mutate(Porcentaje = round(Total_procedimientos / sum(Total_procedimientos) * 100,2))
+
+# Graficamos
+
+g1 <- ggplot(df_centros)
+g1 <- g1 + aes(x = "", y = Total_procedimientos, fill = Centros)
+g1 <- g1 + geom_bar(stat = "identity", width = 1)
+g1 <- g1 + geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), position = position_stack(vjust = 0.5))
+g1 <- g1 + scale_fill_manual(values = c("pink", "lightblue", "yellow", "lightgreen", "grey", "violet"))
+g1 <- g1 + xlab(NULL)
+g1 <- g1 + ylab("Cantidad de procedimientos")
+g1 <- g1 + ggtitle("Top 5 Centros en cantidad de procedimientos", subtitle = "Febrero 2024")
+g1 <- g1 + coord_polar("y")
+g1 <- g1 + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+print(g1)
+
+```
+
+```{r}
+
+
+```
+
 
