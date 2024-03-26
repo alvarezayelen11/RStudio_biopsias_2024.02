@@ -253,7 +253,70 @@ print(g1)
 
 ```{r}
 
+#Analizamos el resultado de biopsias (columna Histologia) según sexo biológico. Descartamos para el análisis los casos donde el patólogo aún no envió los resultados.
+
+grafico_histologia <- filter(df_vcc2, !(Histologia == "No encontrado"))
+grafico_histologia <- aggregate(grafico_histologia$Sexo_biologico, by = list (grafico_histologia$Sexo_biologico,grafico_histologia$Histologia), FUN=length)
+colnames(grafico_histologia) <- c("Sexo_biologico", "Resultado_biopsia", "Cantidad")
+View(grafico_histologia)
+
+g2 <- ggplot(grafico_histologia) 
+g2 <- g2 + aes (x =  Resultado_biopsia, y = Cantidad, fill = Sexo_biologico)
+g2 <- g2 + geom_bar(stat = "identity", position = "dodge", width = 0.75)
+g2 <- g2 + geom_text(aes(label = Cantidad), vjust = -0.1, position = position_dodge(width = 0.75))
+g2 <- g2 + scale_fill_manual (values = c("pink","lightblue", "yellow"))
+g2 <- g2 + xlab ("Resultados Biopsias")
+g2 <- g2 + ylab ("Cantidad")
+g2 <- g2 + ggtitle ("Resultados de biopsias según sexo biológico", subtitle = "Febrero 2024")
+g2 <- g2 + theme(axis.text.x = element_text(angle = 25, hjust = 0.9))
+g2
 
 ```
+
+```{r}
+
+# Por el gráfico anterior, decidimos detenernos en analizar la proporción de hombres y mujeres en los que se halló algún tipo de polipo considerando los totales por sexo biológico. Si bien a primera vista parecen porcentajes similares, cuando hacemos esto vemos que se hay una mayor tasa de hallazgo de pólipos en pacientes masculinos: se encontraron pólipos en el 34% de las mujeres y en el 45.5% de los hombres. 
+
+polipos_por_sexo <- filter(df_vcc2, !(Sexo_biologico == "No informa")) %>%
+  group_by(Sexo_biologico, Hallazgo_de_polipos) %>%
+  summarise(Cantidad = n()) %>%
+  group_by(Sexo_biologico) %>%
+  mutate(Porcentaje = round((Cantidad / sum(Cantidad)) * 100, 2)) %>%
+  arrange(Sexo_biologico, Hallazgo_de_polipos)
+
+View(polipos_por_sexo)
+
+# También analizamos en qué proporción de hombres y mujeres se hallaron adenomas, y encontramos que el porcentaje es levemente mayor en pacientes masculinos (9.14% de adenomas hallados en mujeres, 13.04% de adenomas hallados en hombres) 
+
+adenomas_por_sexo <- filter(df_vcc2, !(Sexo_biologico == "No informa")) %>%
+  mutate(Hay_adenoma = ifelse(Histologia %in% c("Adenocarcinoma", "Adenoma tubular", "Adenoma tubulovelloso", "Adenoma velloso", "Adenoma serrado", "Hiperplasico", "Otros"), "SI", "NO")) %>%
+  group_by(Sexo_biologico, Hay_adenoma) %>%
+  summarise(Total = n()) %>%
+  arrange(Sexo_biologico, Hay_adenoma) %>%
+  group_by(Sexo_biologico) %>%
+  mutate(Porcentaje = round((Total / sum(Total)) * 100,2)) %>%
+  select(-Total)
+
+View(adenomas_por_sexo)
+
+```
+
+```{r}
+
+#Evaluamos mediante regresión linear la relación entre edad y cantidad de pólipos hallados. Concentramos el análisis en los casos en donde se hallaron 3 o más pólipos. No se evidencia una relación entre edad de los pacientes y cantidad de pólipos hallados.
+
+df_filtered <- df_vcc2[!(df_vcc2$Cantidad_de_polipos %in% c(0, 1, 2)), ]
+
+edad_polipos <- lm (Cantidad_de_polipos ~ Edad_paciente, data=df_filtered)
+plot (Cantidad_de_polipos ~ Edad_paciente, data=df_filtered,
+xlab = "Edad", ylab = "Cant. Pólipos",
+main = "Cantidad de pólipos hallados vs edad del paciente")
+pairs(Cantidad_de_polipos ~ Edad_paciente, data = df_filtered)
+abline (edad_polipos, col = "red")
+summary(edad_polipos)
+
+```
+
+
 
 
